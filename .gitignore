@@ -1,0 +1,12 @@
+# OpenClaw on Azure
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+Thumbs.db
+*.tfstate
+*.tfstate.backup
+.terraform/
