@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+name: openclaw-on-azure
+metadata:
+  template: openclaw-on-azure
+services:
+  openclaw:
+    project: .
+    host: containerapp
+    language: js
+    docker:
+      path: Dockerfile
+infra:
+  provider: bicep
+  path: infra
+  module: main

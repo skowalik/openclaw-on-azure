@@ -1,10 +1,52 @@
 # 🦞 OpenClaw on Azure
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fskowalik%2Fopenclaw-on-azure%2Fmaster%2Finfra%2Fazuredeploy.json)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/skowalik/openclaw-on-azure?quickstart=1)
 
-> One-click deploymentof [OpenClaw](https://github.com/openclaw/openclaw) — your personal AI assistant — on Microsoft Azure.
+> Deploy [OpenClaw](https://github.com/openclaw/openclaw) — your personal AI assistant — on Azure in under 5 minutes.
 
-Deploy OpenClaw securely on Azure Container Apps with Azure AI Foundry (Claude Sonnet), Managed Identity (zero API keys), and persistent storage. Designed for teams who want a private, always-on AI assistant without managing infrastructure.
+OpenClaw on Azure gives you a private, always-on AI assistant running on Azure Container Apps with Azure AI Foundry (Claude Sonnet), Managed Identity (zero API keys), and persistent storage. No infrastructure to manage — just deploy and go.
+
+---
+
+## ⚡ Quickstart (Pick One)
+
+### Option 1: One-Click Deploy (Fastest)
+
+Click the button — fill in a resource group — done:
+
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fskowalik%2Fopenclaw-on-azure%2Fmaster%2Finfra%2Fazuredeploy.json)
+
+### Option 2: Azure Cloud Shell (No Install Needed)
+
+Open [shell.azure.com](https://shell.azure.com) and paste:
+
+```bash
+curl -sL https://raw.githubusercontent.com/skowalik/openclaw-on-azure/master/scripts/quickstart.sh | bash
+```
+
+### Option 3: Azure Developer CLI (`azd`)
+
+```bash
+azd init -t skowalik/openclaw-on-azure
+azd up
+```
+
+That's it. `azd` handles resource group creation, Bicep deployment, and container provisioning.
+
+### Option 4: Azure CLI
+
+```bash
+git clone https://github.com/skowalik/openclaw-on-azure.git && cd openclaw-on-azure
+az login
+az group create --name openclaw-rg --location eastus
+az deployment group create \
+  --resource-group openclaw-rg \
+  --template-file infra/main.bicep \
+  --parameters infra/main.parameters.json
+```
+
+All options deploy the same infrastructure (~5 minutes). After deployment, open your Container App URL in the Azure Portal and paste the gateway token from Key Vault.
 
 ---
 
@@ -12,9 +54,7 @@ Deploy OpenClaw securely on Azure Container Apps with Azure AI Foundry (Claude S
 
 [OpenClaw](https://openclaw.ai) is a personal AI assistant you run on your own infrastructure. It connects to the messaging channels you already use — WhatsApp, Telegram, Slack, Discord, Microsoft Teams, Signal, and more — through a single gateway control plane.
 
-## What This Repo Does
-
-This repository provides everything you need to deploy OpenClaw on Azure with a single click:
+## What Gets Deployed
 
 | Component  | Azure Service              | Purpose                                                |
 |------------|----------------------------|--------------------------------------------------------|
@@ -25,22 +65,7 @@ This repository provides everything you need to deploy OpenClaw on Azure with a 
 | **Storage**    | Azure Files            | Persists `~/.openclaw/` config across container restarts |
 | **Monitoring** | Log Analytics          | Container logs, metrics, and diagnostics               |
 
----
-
-## 🚀 Deploy to Azure (One-Click)
-
-### Prerequisites
-
-- An Azure subscription ([free trial](https://azure.microsoft.com/free/))
-- A resource group (or create one during deployment)
-
-### Deploy
-
-Click the button below to deploy all resources:
-
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fskowalik%2Fopenclaw-on-azure%2Fmaster%2Finfra%2Fazuredeploy.json)
-
-The deployment willprompt you for:
+### Deployment Parameters
 
 | Parameter        | Default              | Description                              |
 |------------------|----------------------|------------------------------------------|
@@ -49,29 +74,6 @@ The deployment willprompt you for:
 | `containerImage` | `ghcr.io/openclaw/openclaw:latest` | Container image to deploy  |
 | `containerCpu`   | `0.5`                | CPU cores for the container              |
 | `containerMemory`| `1Gi`                | Memory allocation                        |
-
-After deployment completes (~5 minutes):
-
-1. Navigate to your Container App in the Azure Portal
-2. Copy the **Application URL** (e.g., `https://openclaw-xyz123-app.azurecontainerapps.io`)
-3. Open it in your browser to access the OpenClaw Control UI
-4. Use the gateway token from Key Vault to authenticate
-
-### Deploy via CLI
-
-```bash
-# Login to Azure
-az login
-
-# Create a resource group
-az group create --name openclaw-rg --location eastus
-
-# Deploy
-az deployment group create \
-  --resource-group openclaw-rg \
-  --template-file infra/main.bicep \
-  --parameters infra/main.parameters.json
-```
 
 ---
 
@@ -115,7 +117,19 @@ Deploy with high-context models (Claude Sonnet via AI Foundry) for research task
 
 ## 🖥️ Local Development
 
-### Recommended: OrbStack
+### Recommended: GitHub Codespaces (Zero Install)
+
+Click the badge to open a pre-configured dev environment with Azure CLI, Bicep, `azd`, Node.js 22, and Docker — ready to deploy in seconds:
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/skowalik/openclaw-on-azure?quickstart=1)
+
+Inside the Codespace, just run:
+
+```bash
+azd up
+```
+
+### Local: OrbStack (Recommended)
 
 We recommend [OrbStack](https://orbstack.dev/) as your local container runtime. It's faster and lighter than Docker Desktop, with native support for Docker Compose and Kubernetes.
 
@@ -173,6 +187,9 @@ Requires Node.js ≥22.
 openclaw-on-azure/
 ├── Dockerfile                    # Multi-stage container image
 ├── docker-compose.yml            # Local dev with OrbStack/Docker
+├── azure.yaml                    # Azure Developer CLI (azd) config
+├── .devcontainer/                # GitHub Codespaces / devcontainer
+│   └── devcontainer.json
 ├── .env.example                  # Environment variable template
 ├── infra/
 │   ├── main.bicep                # Main Bicep orchestrator
@@ -186,8 +203,11 @@ openclaw-on-azure/
 │       ├── ai-access.bicep       # AI Services RBAC for Managed Identity
 │       ├── storage.bicep         # Azure Files for persistent config
 │       └── monitoring.bicep      # Log Analytics workspace
+├── scripts/
+│   ├── quickstart.sh             # Cloud Shell one-liner deploy
+│   ├── deploy.sh                 # Full deploy script (bash)
+│   └── deploy.ps1                # Full deploy script (PowerShell)
 ├── docs/                         # Additional documentation
-├── scripts/                      # Helper scripts
 ├── CONTRIBUTING.md               # Contribution guide
 ├── SECURITY.md                   # Security policy
 └── LICENSE                       # MIT License
