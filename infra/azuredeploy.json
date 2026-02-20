@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.40.2.10011",
-      "templateHash": "13762539676138450752"
+      "templateHash": "13750145838651923869"
     }
   },
   "parameters": {
@@ -243,7 +243,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.40.2.10011",
-              "templateHash": "4020231122484424611"
+              "templateHash": "287911751507040852"
             }
           },
           "parameters": {
@@ -271,8 +271,7 @@
                 "tenantId": "[subscription().tenantId]",
                 "enableRbacAuthorization": true,
                 "enableSoftDelete": true,
-                "softDeleteRetentionInDays": 7,
-                "enablePurgeProtection": false
+                "softDeleteRetentionInDays": 7
               }
             },
             {
@@ -324,7 +323,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.40.2.10011",
-              "templateHash": "17695896941296588362"
+              "templateHash": "10141138276277361037"
             }
           },
           "parameters": {
@@ -341,7 +340,7 @@
               "apiVersion": "2024-10-01",
               "name": "[parameters('name')]",
               "location": "[parameters('location')]",
-              "kind": "AIServices",
+              "kind": "OpenAI",
               "sku": {
                 "name": "S0"
               },
@@ -351,22 +350,22 @@
               "properties": {
                 "customSubDomainName": "[parameters('name')]",
                 "publicNetworkAccess": "Enabled",
-                "disableLocalAuth": false
+                "disableLocalAuth": true
               }
             },
             {
               "type": "Microsoft.CognitiveServices/accounts/deployments",
               "apiVersion": "2024-10-01",
-              "name": "[format('{0}/{1}', parameters('name'), 'claude-sonnet')]",
+              "name": "[format('{0}/{1}', parameters('name'), 'gpt-4-1')]",
               "sku": {
                 "name": "GlobalStandard",
-                "capacity": 1
+                "capacity": 10
               },
               "properties": {
                 "model": {
                   "format": "OpenAI",
-                  "name": "claude-sonnet-4-20250514",
-                  "version": "1"
+                  "name": "gpt-4.1",
+                  "version": "2025-04-14"
                 }
               },
               "dependsOn": [

@@ -1,4 +1,4 @@
-// ─── Azure AI Services (Foundry) ───
+// ─── Azure AI Services (OpenAI) ───
 
 param name string
 param location string
@@ -6,7 +6,7 @@ param location string
 resource aiAccount 'Microsoft.CognitiveServices/accounts@2024-10-01' = {
   name: name
   location: location
-  kind: 'AIServices'
+  kind: 'OpenAI'
   sku: {
     name: 'S0'
   }
@@ -16,23 +16,22 @@ resource aiAccount 'Microsoft.CognitiveServices/accounts@2024-10-01' = {
   properties: {
     customSubDomainName: name
     publicNetworkAccess: 'Enabled'
-    disableLocalAuth: false
+    disableLocalAuth: true
   }
 }
 
-// Deploy Claude Sonnet model via serverless (Model as a Service)
-resource sonnetDeployment 'Microsoft.CognitiveServices/accounts/deployments@2024-10-01' = {
+resource gpt4Deployment 'Microsoft.CognitiveServices/accounts/deployments@2024-10-01' = {
   parent: aiAccount
-  name: 'claude-sonnet'
+  name: 'gpt-4-1'
   sku: {
     name: 'GlobalStandard'
-    capacity: 1
+    capacity: 10
   }
   properties: {
     model: {
       format: 'OpenAI'
-      name: 'claude-sonnet-4-20250514'
-      version: '1'
+      name: 'gpt-4.1'
+      version: '2025-04-14'
     }
   }
 }
