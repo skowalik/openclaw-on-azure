@@ -55,4 +55,4 @@ echo "     az keyvault secret show --vault-name <vault> --name openclaw-gateway-
 echo "  3. Paste the token in the Control UI"
 echo "  4. Configure your messaging channels"
 echo ""
-echo "📖 Full guide: https://github.com/YOUR_ORG/openclaw-on-azure#post-deployment-setup"
+echo "📖 Full guide: https://github.com/skowalik/openclaw-on-azure#post-deployment-setup"

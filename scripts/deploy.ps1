@@ -56,4 +56,4 @@ Write-Host "     az keyvault secret show --vault-name <vault> --name openclaw-ga
 Write-Host "  3. Paste the token in the Control UI"
 Write-Host "  4. Configure your messaging channels"
 Write-Host ""
-Write-Host "📖 Full guide: https://github.com/YOUR_ORG/openclaw-on-azure#post-deployment-setup"
+Write-Host "📖 Full guide: https://github.com/skowalik/openclaw-on-azure#post-deployment-setup"

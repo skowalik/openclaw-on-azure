@@ -1,8 +1,8 @@
 # 🦞 OpenClaw on Azure
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FYOUR_ORG%2Fopenclaw-on-azure%2Fmain%2Finfra%2Fazuredeploy.json)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fskowalik%2Fopenclaw-on-azure%2Fmaster%2Finfra%2Fazuredeploy.json)
 
-> One-click deployment of [OpenClaw](https://github.com/openclaw/openclaw) — your personal AI assistant — on Microsoft Azure.
+> One-click deploymentof [OpenClaw](https://github.com/openclaw/openclaw) — your personal AI assistant — on Microsoft Azure.
 
 Deploy OpenClaw securely on Azure Container Apps with Azure AI Foundry (Claude Sonnet), Managed Identity (zero API keys), and persistent storage. Designed for teams who want a private, always-on AI assistant without managing infrastructure.
 
@@ -38,9 +38,9 @@ This repository provides everything you need to deploy OpenClaw on Azure with a 
 
 Click the button below to deploy all resources:
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FYOUR_ORG%2Fopenclaw-on-azure%2Fmain%2Finfra%2Fazuredeploy.json)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fskowalik%2Fopenclaw-on-azure%2Fmaster%2Finfra%2Fazuredeploy.json)
 
-The deployment will prompt you for:
+The deployment willprompt you for:
 
 | Parameter        | Default              | Description                              |
 |------------------|----------------------|------------------------------------------|
@@ -130,7 +130,7 @@ We recommend [OrbStack](https://orbstack.dev/) as your local container runtime. 
 
 ```bash
 # Clone the repo
-git clone https://github.com/YOUR_ORG/openclaw-on-azure.git
+git clone https://github.com/skowalik/openclaw-on-azure.git
 cd openclaw-on-azure
 
 # Build and start

@@ -15,7 +15,7 @@ Thanks for your interest in contributing! This project makes it easy to deploy [
 
 1. **Clone the repo:**
    ```bash
-   git clone https://github.com/YOUR_ORG/openclaw-on-azure.git
+   git clone https://github.com/skowalik/openclaw-on-azure.git
    cd openclaw-on-azure
    ```
 
