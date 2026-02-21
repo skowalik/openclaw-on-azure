@@ -9,10 +9,10 @@
       "value": "ghcr.io/openclaw/openclaw:latest"
     },
     "containerCpu": {
-      "value": "0.5"
+      "value": "1.0"
     },
     "containerMemory": {
-      "value": "1Gi"
+      "value": "2Gi"
     }
   }
 }

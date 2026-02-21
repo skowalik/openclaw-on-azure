@@ -15,10 +15,10 @@ param location string = resourceGroup().location
 param containerImage string = 'ghcr.io/openclaw/openclaw:latest'
 
 @description('Container CPU cores')
-param containerCpu string = '0.5'
+param containerCpu string = '1.0'
 
-@description('Container memory (e.g. 1Gi)')
-param containerMemory string = '1Gi'
+@description('Container memory (e.g. 2Gi)')
+param containerMemory string = '2Gi'
 
 @description('OpenClaw gateway token (auto-generated if empty)')
 @secure()
@@ -77,9 +77,6 @@ module containerApps 'modules/container-apps.bicep' = {
     containerMemory: containerMemory
     logAnalyticsWorkspaceId: monitoring.outputs.workspaceId
     logAnalyticsSharedKey: monitoring.outputs.sharedKey
-    storageAccountName: storage.outputs.storageAccountName
-    storageAccountKey: storage.outputs.storageAccountKey
-    fileShareName: storage.outputs.fileShareName
     keyVaultUri: keyVault.outputs.vaultUri
     aiEndpoint: aiFoundry.outputs.endpoint
     gatewayToken: gatewayToken

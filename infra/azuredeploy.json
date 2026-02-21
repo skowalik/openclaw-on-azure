@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.40.2.10011",
-      "templateHash": "13750145838651923869"
+      "templateHash": "12625297366972188353"
     }
   },
   "parameters": {
@@ -34,16 +34,16 @@
     },
     "containerCpu": {
       "type": "string",
-      "defaultValue": "0.5",
+      "defaultValue": "1.0",
       "metadata": {
         "description": "Container CPU cores"
       }
     },
     "containerMemory": {
       "type": "string",
-      "defaultValue": "1Gi",
+      "defaultValue": "2Gi",
       "metadata": {
-        "description": "Container memory (e.g. 1Gi)"
+        "description": "Container memory (e.g. 2Gi)"
       }
     },
     "gatewayToken": {
@@ -148,7 +148,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.40.2.10011",
-              "templateHash": "8629167297453535563"
+              "templateHash": "13175020344320124049"
             }
           },
           "parameters": {
@@ -176,7 +176,8 @@
               "properties": {
                 "minimumTlsVersion": "TLS1_2",
                 "supportsHttpsTrafficOnly": true,
-                "allowBlobPublicAccess": false
+                "allowBlobPublicAccess": false,
+                "allowSharedKeyAccess": true
               }
             },
             {
@@ -421,15 +422,6 @@
           "logAnalyticsSharedKey": {
             "value": "[reference(resourceId('Microsoft.Resources/deployments', 'monitoring'), '2025-04-01').outputs.sharedKey.value]"
           },
-          "storageAccountName": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'storage'), '2025-04-01').outputs.storageAccountName.value]"
-          },
-          "storageAccountKey": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'storage'), '2025-04-01').outputs.storageAccountKey.value]"
-          },
-          "fileShareName": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'storage'), '2025-04-01').outputs.fileShareName.value]"
-          },
           "keyVaultUri": {
             "value": "[reference(resourceId('Microsoft.Resources/deployments', 'keyvault'), '2025-04-01').outputs.vaultUri.value]"
           },
@@ -447,7 +439,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.40.2.10011",
-              "templateHash": "3196450894614159500"
+              "templateHash": "18381325967717521794"
             }
           },
           "parameters": {
@@ -471,15 +463,6 @@
             },
             "logAnalyticsSharedKey": {
               "type": "securestring"
-            },
-            "storageAccountName": {
-              "type": "string"
-            },
-            "storageAccountKey": {
-              "type": "securestring"
-            },
-            "fileShareName": {
-              "type": "string"
             },
             "keyVaultUri": {
               "type": "string"
@@ -506,22 +489,6 @@
                   }
                 }
               }
-            },
-            {
-              "type": "Microsoft.App/managedEnvironments/storages",
-              "apiVersion": "2024-03-01",
-              "name": "[format('{0}/{1}', format('{0}-env', parameters('name')), 'openclawconfig')]",
-              "properties": {
-                "azureFile": {
-                  "accountName": "[parameters('storageAccountName')]",
-                  "accountKey": "[parameters('storageAccountKey')]",
-                  "shareName": "[parameters('fileShareName')]",
-                  "accessMode": "ReadWrite"
-                }
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.App/managedEnvironments', format('{0}-env', parameters('name')))]"
-              ]
             },
             {
               "type": "Microsoft.App/containerApps",
@@ -582,6 +549,18 @@
                           "value": "production"
                         }
                       ],
+                      "command": [
+                        "node"
+                      ],
+                      "args": [
+                        "openclaw.mjs",
+                        "gateway",
+                        "--allow-unconfigured",
+                        "--bind",
+                        "lan",
+                        "--port",
+                        "18789"
+                      ],
                       "volumeMounts": [
                         {
                           "volumeName": "openclaw-config",
@@ -593,8 +572,7 @@
                   "volumes": [
                     {
                       "name": "openclaw-config",
-                      "storageName": "openclawconfig",
-                      "storageType": "AzureFile"
+                      "storageType": "EmptyDir"
                     }
                   ],
                   "scale": {
@@ -623,8 +601,7 @@
       "dependsOn": [
         "[resourceId('Microsoft.Resources/deployments', 'aiFoundry')]",
         "[resourceId('Microsoft.Resources/deployments', 'keyvault')]",
-        "[resourceId('Microsoft.Resources/deployments', 'monitoring')]",
-        "[resourceId('Microsoft.Resources/deployments', 'storage')]"
+        "[resourceId('Microsoft.Resources/deployments', 'monitoring')]"
       ]
     },
     {

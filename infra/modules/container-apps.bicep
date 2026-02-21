@@ -10,12 +10,6 @@ param logAnalyticsWorkspaceId string
 @secure()
 param logAnalyticsSharedKey string
 
-param storageAccountName string
-
-@secure()
-param storageAccountKey string
-
-param fileShareName string
 param keyVaultUri string
 param aiEndpoint string
 
@@ -33,20 +27,6 @@ resource containerAppEnv 'Microsoft.App/managedEnvironments@2024-03-01' = {
         customerId: reference(logAnalyticsWorkspaceId, '2023-09-01').customerId
         sharedKey: logAnalyticsSharedKey
       }
-    }
-  }
-}
-
-// Azure Files storage link
-resource envStorage 'Microsoft.App/managedEnvironments/storages@2024-03-01' = {
-  parent: containerAppEnv
-  name: 'openclawconfig'
-  properties: {
-    azureFile: {
-      accountName: storageAccountName
-      accountKey: storageAccountKey
-      shareName: fileShareName
-      accessMode: 'ReadWrite'
     }
   }
 }
@@ -109,6 +89,18 @@ resource containerApp 'Microsoft.App/containerApps@2024-03-01' = {
               value: 'production'
             }
           ]
+          command: [
+            'node'
+          ]
+          args: [
+            'openclaw.mjs'
+            'gateway'
+            '--allow-unconfigured'
+            '--bind'
+            'lan'
+            '--port'
+            '18789'
+          ]
           volumeMounts: [
             {
               volumeName: 'openclaw-config'
@@ -120,8 +112,7 @@ resource containerApp 'Microsoft.App/containerApps@2024-03-01' = {
       volumes: [
         {
           name: 'openclaw-config'
-          storageName: 'openclawconfig'
-          storageType: 'AzureFile'
+          storageType: 'EmptyDir'
         }
       ]
       scale: {
