@@ -24,6 +24,9 @@ param containerMemory string = '2Gi'
 @secure()
 param gatewayToken string = newGuid()
 
+@description('Object ID of the deploying user (for Key Vault access). Leave empty to skip.')
+param deployerPrincipalId string = ''
+
 // Unique suffix for globally unique resource names
 var uniqueSuffix = uniqueString(resourceGroup().id, baseName)
 var resourcePrefix = '${baseName}${uniqueSuffix}'
@@ -89,6 +92,15 @@ module keyVaultAccess 'modules/keyvault-access.bicep' = {
   params: {
     keyVaultName: keyVault.outputs.vaultName
     principalId: containerApps.outputs.identityPrincipalId
+  }
+}
+
+// Grant deploying user access to Key Vault secrets
+module keyVaultDeployerAccess 'modules/keyvault-deployer-access.bicep' = if (!empty(deployerPrincipalId)) {
+  name: 'keyVaultDeployerAccess'
+  params: {
+    keyVaultName: keyVault.outputs.vaultName
+    principalId: deployerPrincipalId
   }
 }
 

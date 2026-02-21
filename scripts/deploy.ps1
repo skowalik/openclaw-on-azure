@@ -27,6 +27,9 @@ try {
     az login
 }
 
+# Get deployer's object ID for Key Vault access
+$deployerOid = az ad signed-in-user show --query id -o tsv 2>$null
+
 # Create resource group
 Write-Host "📦 Creating resource group '$ResourceGroup' in '$Location'..." -ForegroundColor Yellow
 az group create --name $ResourceGroup --location $Location --output none
@@ -36,7 +39,7 @@ Write-Host "🚀 Deploying infrastructure (this takes ~5 minutes)..." -Foregroun
 $result = az deployment group create `
     --resource-group $ResourceGroup `
     --template-file infra/main.bicep `
-    --parameters baseName=$BaseName `
+    --parameters baseName=$BaseName deployerPrincipalId=$deployerOid `
     --query "properties.outputs" `
     --output json | ConvertFrom-Json
 

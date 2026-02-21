@@ -26,6 +26,9 @@ az account show --query "name" -o tsv 2>/dev/null || {
   az login
 }
 
+# Get deployer's object ID for Key Vault access
+DEPLOYER_OID=$(az ad signed-in-user show --query id -o tsv 2>/dev/null || echo "")
+
 # Create resource group
 echo "📦 Creating resource group '$RESOURCE_GROUP' in '$LOCATION'..."
 az group create --name "$RESOURCE_GROUP" --location "$LOCATION" --output none
@@ -35,7 +38,7 @@ echo "🚀 Deploying infrastructure (this takes ~5 minutes)..."
 RESULT=$(az deployment group create \
   --resource-group "$RESOURCE_GROUP" \
   --template-file infra/main.bicep \
-  --parameters baseName="$BASE_NAME" \
+  --parameters baseName="$BASE_NAME" deployerPrincipalId="$DEPLOYER_OID" \
   --query "properties.outputs" \
   --output json)
 
