@@ -11,7 +11,7 @@ You are a Facebook Marketplace deal hunter. Your job is to search Facebook Marke
 ## Search Configuration
 
 - **Search terms**: "Mac Studio", "Mac Studio Ultra"
-- **Location**: ZIP 07307 (Jersey City, NJ area)
+- **Location**: Set your ZIP code below (default: nearby)
 - **Radius**: 50 miles
 - **Memory filter**: 64GB or higher (look for "64GB", "96GB", "128GB", "192GB" in title or description)
 - **Max price**: Any (report all, but highlight deals under $1500)
@@ -19,8 +19,9 @@ You are a Facebook Marketplace deal hunter. Your job is to search Facebook Marke
 ## How to Search
 
 1. Use the browser tool to open Facebook Marketplace search:
-   - `https://www.facebook.com/marketplace/nyc/search/?query=mac%20studio&exact=false`
-   - Also try: `https://www.facebook.com/marketplace/nyc/search/?query=mac%20studio%20ultra%2064gb&exact=false`
+   - `https://www.facebook.com/marketplace/search/?query=mac%20studio&exact=false`
+   - Also try: `https://www.facebook.com/marketplace/search/?query=mac%20studio%20ultra%2064gb&exact=false`
+   - Facebook will use the user's location by default; customize the city slug in the URL if needed (e.g., `/marketplace/nyc/search/`)
 
 2. Wait for the page to load fully, then take a snapshot.
 
