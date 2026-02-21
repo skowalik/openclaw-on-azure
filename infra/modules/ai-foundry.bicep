@@ -1,12 +1,12 @@
-// ─── Azure AI Services (OpenAI) ───
+// ─── Microsoft Foundry (Azure AI Services + GPT-5.2) ───
 
 param name string
-param location string
+param location string = 'eastus2'
 
-resource aiAccount 'Microsoft.CognitiveServices/accounts@2024-10-01' = {
+resource aiAccount 'Microsoft.CognitiveServices/accounts@2025-12-01' = {
   name: name
   location: location
-  kind: 'OpenAI'
+  kind: 'AIServices'
   sku: {
     name: 'S0'
   }
@@ -20,9 +20,9 @@ resource aiAccount 'Microsoft.CognitiveServices/accounts@2024-10-01' = {
   }
 }
 
-resource gpt4Deployment 'Microsoft.CognitiveServices/accounts/deployments@2024-10-01' = {
+resource gpt52Deployment 'Microsoft.CognitiveServices/accounts/deployments@2025-12-01' = {
   parent: aiAccount
-  name: 'gpt-4-1'
+  name: 'gpt-5-2-chat'
   sku: {
     name: 'GlobalStandard'
     capacity: 10
@@ -30,8 +30,8 @@ resource gpt4Deployment 'Microsoft.CognitiveServices/accounts/deployments@2024-1
   properties: {
     model: {
       format: 'OpenAI'
-      name: 'gpt-4.1'
-      version: '2025-04-14'
+      name: 'gpt-5.2-chat'
+      version: '2026-02-10'
     }
   }
 }

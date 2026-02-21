@@ -3,10 +3,10 @@
 param aiAccountName string
 param principalId string
 
-// Cognitive Services OpenAI User role
+// Cognitive Services User role (for inference)
 var cognitiveServicesUserRoleId = '5e0bd9bd-7b93-4f28-af87-19fc36ad61bd'
 
-resource aiAccount 'Microsoft.CognitiveServices/accounts@2024-10-01' existing = {
+resource aiAccount 'Microsoft.CognitiveServices/accounts@2025-12-01' existing = {
   name: aiAccountName
 }
 

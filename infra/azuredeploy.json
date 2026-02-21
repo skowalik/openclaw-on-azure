@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.40.2.10011",
-      "templateHash": "14691512740083871969"
+      "templateHash": "4638028112126968545"
     }
   },
   "parameters": {
@@ -58,6 +58,13 @@
       "defaultValue": "",
       "metadata": {
         "description": "Object ID of the deploying user (for Key Vault access). Leave empty to skip."
+      }
+    },
+    "aiLocation": {
+      "type": "string",
+      "defaultValue": "eastus2",
+      "metadata": {
+        "description": "Azure region for AI Services (must support GPT-5.2: eastus2 or swedencentral)"
       }
     }
   },
@@ -321,7 +328,7 @@
             "value": "[format('{0}-ai', variables('resourcePrefix'))]"
           },
           "location": {
-            "value": "[parameters('location')]"
+            "value": "[parameters('aiLocation')]"
           }
         },
         "template": {
@@ -331,7 +338,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.40.2.10011",
-              "templateHash": "10141138276277361037"
+              "templateHash": "1333339016000871386"
             }
           },
           "parameters": {
@@ -339,16 +346,17 @@
               "type": "string"
             },
             "location": {
-              "type": "string"
+              "type": "string",
+              "defaultValue": "eastus2"
             }
           },
           "resources": [
             {
               "type": "Microsoft.CognitiveServices/accounts",
-              "apiVersion": "2024-10-01",
+              "apiVersion": "2025-12-01",
               "name": "[parameters('name')]",
               "location": "[parameters('location')]",
-              "kind": "OpenAI",
+              "kind": "AIServices",
               "sku": {
                 "name": "S0"
               },
@@ -363,8 +371,8 @@
             },
             {
               "type": "Microsoft.CognitiveServices/accounts/deployments",
-              "apiVersion": "2024-10-01",
-              "name": "[format('{0}/{1}', parameters('name'), 'gpt-4-1')]",
+              "apiVersion": "2025-12-01",
+              "name": "[format('{0}/{1}', parameters('name'), 'gpt-5-2-chat')]",
               "sku": {
                 "name": "GlobalStandard",
                 "capacity": 10
@@ -372,8 +380,8 @@
               "properties": {
                 "model": {
                   "format": "OpenAI",
-                  "name": "gpt-4.1",
-                  "version": "2025-04-14"
+                  "name": "gpt-5.2-chat",
+                  "version": "2026-02-10"
                 }
               },
               "dependsOn": [
@@ -384,7 +392,7 @@
           "outputs": {
             "endpoint": {
               "type": "string",
-              "value": "[reference(resourceId('Microsoft.CognitiveServices/accounts', parameters('name')), '2024-10-01').endpoint]"
+              "value": "[reference(resourceId('Microsoft.CognitiveServices/accounts', parameters('name')), '2025-12-01').endpoint]"
             },
             "accountName": {
               "type": "string",

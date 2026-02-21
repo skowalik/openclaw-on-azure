@@ -27,6 +27,9 @@ param gatewayToken string = newGuid()
 @description('Object ID of the deploying user (for Key Vault access). Leave empty to skip.')
 param deployerPrincipalId string = ''
 
+@description('Azure region for AI Services (must support GPT-5.2: eastus2 or swedencentral)')
+param aiLocation string = 'eastus2'
+
 // Unique suffix for globally unique resource names
 var uniqueSuffix = uniqueString(resourceGroup().id, baseName)
 var resourcePrefix = '${baseName}${uniqueSuffix}'
@@ -60,12 +63,12 @@ module keyVault 'modules/keyvault.bicep' = {
   }
 }
 
-// ─── AI Foundry (Azure AI Services) ───
+// ─── AI Foundry (Microsoft Foundry — GPT-5.2 in eastus2) ───
 module aiFoundry 'modules/ai-foundry.bicep' = {
   name: 'aiFoundry'
   params: {
     name: '${resourcePrefix}-ai'
-    location: location
+    location: aiLocation
   }
 }
 

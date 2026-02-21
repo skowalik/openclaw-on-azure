@@ -5,7 +5,7 @@
 
 > Deploy [OpenClaw](https://github.com/openclaw/openclaw) — your personal AI assistant — on Azure in under 5 minutes.
 
-OpenClaw on Azure gives you a private, always-on AI assistant running on Azure Container Apps with Azure AI Foundry (Claude Sonnet), Managed Identity (zero API keys), and persistent storage. No infrastructure to manage — just deploy and go.
+OpenClaw on Azure gives you a private, always-on AI assistant running on Azure Container Apps with Microsoft Foundry (GPT-5.2), Managed Identity (zero API keys), and persistent storage. No infrastructure to manage — just deploy and go.
 
 ---
 
@@ -59,7 +59,7 @@ All options deploy the same infrastructure (~5 minutes). After deployment, open 
 | Component  | Azure Service              | Purpose                                                |
 |------------|----------------------------|--------------------------------------------------------|
 | **Compute**    | Container Apps         | Runs OpenClaw gateway (serverless, scales to zero)     |
-| **AI Model**   | AI Foundry + Claude Sonnet | Latest Sonnet model, billed through your Azure subscription |
+| **AI Model**   | Microsoft Foundry (GPT-5.2) | Latest GPT-5.2 model via Azure AI Services, billed through your Azure subscription |
 | **Auth**       | Managed Identity       | Zero API keys — Container Apps authenticates to Foundry & Key Vault automatically |
 | **Secrets**    | Key Vault              | Gateway token and channel tokens (RBAC-protected)      |
 | **Storage**    | Azure Files            | Persists `~/.openclaw/` config across container restarts |
@@ -72,8 +72,9 @@ All options deploy the same infrastructure (~5 minutes). After deployment, open 
 | `baseName`       | `openclaw`           | Base name for all resources              |
 | `location`       | Resource group region | Azure region                            |
 | `containerImage` | `ghcr.io/openclaw/openclaw:latest` | Container image to deploy  |
-| `containerCpu`   | `0.5`                | CPU cores for the container              |
-| `containerMemory`| `1Gi`                | Memory allocation                        |
+| `containerCpu`   | `1.0`                | CPU cores for the container              |
+| `containerMemory`| `2Gi`                | Memory allocation                        |
+| `aiLocation`     | `eastus2`            | Region for AI Services (must support GPT-5.2) |
 
 ---
 
@@ -111,7 +112,7 @@ Use OpenClaw as a prototype for AI-assisted customer support across WhatsApp, Te
 Connect OpenClaw to Discord or Slack in your dev team. Use it for code reviews, documentation lookups, debugging help, and automated notifications via cron jobs and webhooks.
 
 ### Research & Analysis Assistant
-Deploy with high-context models (Claude Sonnet via AI Foundry) for research tasks — summarizing papers, analyzing data, drafting reports — accessible from any messaging channel.
+Deploy with high-context models (GPT-5.2 via Microsoft Foundry) for research tasks — summarizing papers, analyzing data, drafting reports — accessible from any messaging channel.
 
 ---
 
@@ -199,7 +200,7 @@ openclaw-on-azure/
 │       ├── container-apps.bicep  # Container Apps + Environment
 │       ├── keyvault.bicep        # Key Vault + secrets
 │       ├── keyvault-access.bicep # Key Vault RBAC for Managed Identity
-│       ├── ai-foundry.bicep      # Azure AI Services + Claude Sonnet
+│       ├── ai-foundry.bicep      # Microsoft Foundry (AI Services + GPT-5.2)
 │       ├── ai-access.bicep       # AI Services RBAC for Managed Identity
 │       ├── storage.bicep         # Azure Files for persistent config
 │       └── monitoring.bicep      # Log Analytics workspace
@@ -223,7 +224,7 @@ After deploying, configure OpenClaw through the Control UI or CLI:
 Navigate to your Container App URL and paste the gateway token from Key Vault.
 
 ### 2. Configure AI Model
-The deployment includes Azure AI Foundry with Claude Sonnet. OpenClaw will auto-detect the model endpoint via the `AZURE_AI_ENDPOINT` environment variable.
+The deployment includes Microsoft Foundry with GPT-5.2. OpenClaw will auto-detect the model endpoint via the `AZURE_AI_ENDPOINT` environment variable.
 
 ### 3. Add Messaging Channels
 
@@ -277,8 +278,8 @@ openclaw pairing approve <channel> <code>
 │  └──────────────┘                                    │
 │                                                      │
 │  ┌──────────────────────────────────────────────┐   │
-│  │  Azure AI Foundry                             │   │
-│  │  └─ Claude Sonnet (serverless)                │   │
+│  │  Microsoft Foundry (AI Services)                │   │
+│  │  └─ GPT-5.2 (GlobalStandard, East US 2)       │   │
 │  └──────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────┘
           │
@@ -296,7 +297,7 @@ openclaw pairing approve <channel> <code>
 ## FAQ
 
 **Q: How much does this cost?**
-A: Azure Container Apps scales to zero when idle, so you only pay when the gateway is active. Key Vault, Storage, and Log Analytics have minimal costs. The main cost is AI Foundry usage (pay-per-token for Claude Sonnet). Expect ~$5-20/month for light personal use.
+A: Azure Container Apps scales to zero when idle, so you only pay when the gateway is active. Key Vault, Storage, and Log Analytics have minimal costs. The main cost is AI Services usage (pay-per-token for GPT-5.2). Expect ~$5-20/month for light personal use.
 
 **Q: Can I use a different AI model?**
 A: Yes. Modify the `ai-foundry.bicep` module to deploy a different model, or configure OpenClaw to use any supported provider (OpenAI, Anthropic direct, etc.) via the Control UI.
