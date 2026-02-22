@@ -2,10 +2,8 @@
 .github
 node_modules
 dist
-*.md
 LICENSE
 .env
 .env.*
 docs/
 infra/
-scripts/

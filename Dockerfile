@@ -1,36 +1,25 @@
-# ─── Build stage ───
-FROM node:22-bookworm-slim AS build
+# ─── Based on official OpenClaw image, adding Chromium for browser automation ───
+FROM ghcr.io/openclaw/openclaw:latest
 
-RUN corepack enable
-WORKDIR /app
+USER root
 
-RUN npm install -g openclaw@latest
+# Install Playwright Chromium + deps (same method as official image's OPENCLAW_INSTALL_BROWSER)
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends xvfb && \
+    mkdir -p /home/node/.cache/ms-playwright && \
+    PLAYWRIGHT_BROWSERS_PATH=/home/node/.cache/ms-playwright \
+    node /app/node_modules/playwright-core/cli.js install --with-deps chromium && \
+    chown -R node:node /home/node/.cache/ms-playwright && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
-# ─── Runtime stage ───
-FROM node:22-bookworm-slim AS runtime
+# Custom skills (baked into image, copied to agent dir at startup)
+COPY skills/ /opt/openclaw-skills/
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates curl tini \
-    && rm -rf /var/lib/apt/lists/*
-
-COPY --from=build /usr/local/lib/node_modules/openclaw /usr/local/lib/node_modules/openclaw
-COPY --from=build /usr/local/bin/openclaw /usr/local/bin/openclaw
-
-# Non-root user (security-first)
-RUN mkdir -p /home/node/.openclaw /home/node/.openclaw/workspace \
-    && chown -R node:node /home/node
+# Entrypoint script (config restore, MI token fetch, browser setup)
+COPY scripts/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
 USER node
-WORKDIR /home/node
 
-ENV NODE_ENV=production
-ENV OPENCLAW_GATEWAY_BIND=0.0.0.0
-ENV OPENCLAW_GATEWAY_PORT=18789
-
-EXPOSE 18789
-
-HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-    CMD curl -f http://localhost:18789/health || exit 1
-
-ENTRYPOINT ["tini", "--"]
-CMD ["openclaw", "gateway", "--port", "18789", "--allow-unconfigured"]
+CMD ["sh", "/usr/local/bin/entrypoint.sh"]
