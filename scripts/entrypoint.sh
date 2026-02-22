@@ -24,7 +24,7 @@ export AZURE_OPENAI_API_KEY=$(curl -sf \
   | node -e "let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>console.log(JSON.parse(d).access_token))")
 
 # Set default model
-node openclaw.mjs models set azure-openai-responses/gpt-5.2 2>/dev/null || true
+node openclaw.mjs models set azure-openai-responses/gpt-5-2-chat 2>/dev/null || true
 
 # Start gateway in background, then auto-approve browser devices in a loop
 node openclaw.mjs gateway --allow-unconfigured --bind lan --port 18789 &
