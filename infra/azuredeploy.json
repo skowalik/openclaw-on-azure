@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.40.2.10011",
-      "templateHash": "4977055512602066320"
+      "templateHash": "16549738344280503381"
     }
   },
   "parameters": {
@@ -450,7 +450,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.40.2.10011",
-              "templateHash": "11098835120739894515"
+              "templateHash": "13711049068306066604"
             }
           },
           "parameters": {
@@ -583,7 +583,7 @@
                       ],
                       "args": [
                         "-c",
-                        "mkdir -p /home/node/.openclaw/credentials/whatsapp/default && printf '%s' \"$OPENCLAW_CONFIG\" > /home/node/.openclaw/openclaw.json && printf '%s' \"$OPENCLAW_WA_AUTH\" | base64 -d | tar xzf - -C /home/node/.openclaw/credentials/whatsapp/default && node openclaw.mjs gateway --allow-unconfigured --bind lan --port 18789 & GW=$! && (sleep 8 && node openclaw.mjs devices approve --latest --url ws://localhost:18789 --token \"$OPENCLAW_GATEWAY_TOKEN\" 2>/dev/null || true) & wait $GW"
+                        "mkdir -p /home/node/.openclaw/credentials/whatsapp/default && printf '%s' \"$OPENCLAW_CONFIG\" > /home/node/.openclaw/openclaw.json && printf '%s' \"$OPENCLAW_WA_AUTH\" | base64 -d | tar xzf - -C /home/node/.openclaw/credentials/whatsapp/default && export AZURE_OPENAI_ENDPOINT=\"$AZURE_AI_ENDPOINT\" && export AZURE_OPENAI_API_KEY=$(curl -sf \"http://localhost:12356/msi/token?resource=https%3A%2F%2Fcognitiveservices.azure.com&api-version=2019-08-01\" -H \"X-IDENTITY-HEADER: $IDENTITY_HEADER\" | node -e \"let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>console.log(JSON.parse(d).access_token))\") && node openclaw.mjs models set azure-openai-responses/gpt-5.2 2>/dev/null; node openclaw.mjs gateway --allow-unconfigured --bind lan --port 18789 & GW=$! && (sleep 8; while kill -0 $GW 2>/dev/null; do node openclaw.mjs devices approve --latest --url ws://localhost:18789 --token \"$OPENCLAW_GATEWAY_TOKEN\" 2>/dev/null || true; sleep 30; done) & wait $GW"
                       ],
                       "volumeMounts": [
                         {
