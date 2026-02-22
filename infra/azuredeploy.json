@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.40.2.10011",
-      "templateHash": "18108959174402079283"
+      "templateHash": "12681511932582516190"
     }
   },
   "parameters": {
@@ -162,7 +162,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.40.2.10011",
-              "templateHash": "13175020344320124049"
+              "templateHash": "16951354673039505741"
             }
           },
           "parameters": {
@@ -191,7 +191,7 @@
                 "minimumTlsVersion": "TLS1_2",
                 "supportsHttpsTrafficOnly": true,
                 "allowBlobPublicAccess": false,
-                "allowSharedKeyAccess": true
+                "allowSharedKeyAccess": false
               }
             },
             {
@@ -218,10 +218,6 @@
             "storageAccountName": {
               "type": "string",
               "value": "[take(replace(toLower(parameters('name')), '-', ''), 24)]"
-            },
-            "storageAccountKey": {
-              "type": "string",
-              "value": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', take(replace(toLower(parameters('name')), '-', ''), 24)), '2023-05-01').keys[0].value]"
             },
             "fileShareName": {
               "type": "string",
@@ -454,7 +450,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.40.2.10011",
-              "templateHash": "1468337582889549322"
+              "templateHash": "10650938574346484733"
             }
           },
           "parameters": {
@@ -587,7 +583,7 @@
                       ],
                       "args": [
                         "-c",
-                        "mkdir -p /home/node/.openclaw/credentials/whatsapp/default && echo \"$OPENCLAW_CONFIG\" > /home/node/.openclaw/openclaw.json && echo \"$OPENCLAW_WA_AUTH\" | base64 -d | tar xzf - -C /home/node/.openclaw/credentials/whatsapp/default && exec node openclaw.mjs gateway --allow-unconfigured --bind lan --port 18789"
+                        "mkdir -p /home/node/.openclaw/credentials/whatsapp/default && printf '%s' \"$OPENCLAW_CONFIG\" > /home/node/.openclaw/openclaw.json && printf '%s' \"$OPENCLAW_WA_AUTH\" | base64 -d | tar xzf - -C /home/node/.openclaw/credentials/whatsapp/default && exec node openclaw.mjs gateway --allow-unconfigured --bind lan --port 18789"
                       ],
                       "volumeMounts": [
                         {

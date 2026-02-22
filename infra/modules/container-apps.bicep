@@ -112,7 +112,7 @@ resource containerApp 'Microsoft.App/containerApps@2024-03-01' = {
           ]
           args: [
             '-c'
-            'mkdir -p /home/node/.openclaw/credentials/whatsapp/default && echo "$OPENCLAW_CONFIG" > /home/node/.openclaw/openclaw.json && echo "$OPENCLAW_WA_AUTH" | base64 -d | tar xzf - -C /home/node/.openclaw/credentials/whatsapp/default && exec node openclaw.mjs gateway --allow-unconfigured --bind lan --port 18789'
+            'mkdir -p /home/node/.openclaw/credentials/whatsapp/default && printf \'%s\' "$OPENCLAW_CONFIG" > /home/node/.openclaw/openclaw.json && printf \'%s\' "$OPENCLAW_WA_AUTH" | base64 -d | tar xzf - -C /home/node/.openclaw/credentials/whatsapp/default && exec node openclaw.mjs gateway --allow-unconfigured --bind lan --port 18789'
           ]
           volumeMounts: [
             {
