@@ -52,6 +52,11 @@ resource containerApp 'Microsoft.App/containerApps@2024-03-01' = {
           name: 'gateway-token'
           value: gatewayToken
         }
+        {
+          name: 'openclaw-config-json'
+          keyVaultUrl: '${keyVaultUri}secrets/openclaw-config'
+          identity: 'system'
+        }
       ]
     }
     template: {
@@ -67,6 +72,10 @@ resource containerApp 'Microsoft.App/containerApps@2024-03-01' = {
             {
               name: 'OPENCLAW_GATEWAY_TOKEN'
               secretRef: 'gateway-token'
+            }
+            {
+              name: 'OPENCLAW_CONFIG'
+              secretRef: 'openclaw-config-json'
             }
             {
               name: 'OPENCLAW_GATEWAY_BIND'
@@ -90,16 +99,11 @@ resource containerApp 'Microsoft.App/containerApps@2024-03-01' = {
             }
           ]
           command: [
-            'node'
+            'sh'
           ]
           args: [
-            'openclaw.mjs'
-            'gateway'
-            '--allow-unconfigured'
-            '--bind'
-            'lan'
-            '--port'
-            '18789'
+            '-c'
+            'mkdir -p /home/node/.openclaw && echo "$OPENCLAW_CONFIG" > /home/node/.openclaw/openclaw.json && exec node openclaw.mjs gateway --allow-unconfigured --bind lan --port 18789'
           ]
           volumeMounts: [
             {

@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.40.2.10011",
-      "templateHash": "4638028112126968545"
+      "templateHash": "10989729861377262516"
     }
   },
   "parameters": {
@@ -454,7 +454,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.40.2.10011",
-              "templateHash": "18381325967717521794"
+              "templateHash": "16099933769388402335"
             }
           },
           "parameters": {
@@ -526,6 +526,11 @@
                     {
                       "name": "gateway-token",
                       "value": "[parameters('gatewayToken')]"
+                    },
+                    {
+                      "name": "openclaw-config-json",
+                      "keyVaultUrl": "[format('{0}secrets/openclaw-config', parameters('keyVaultUri'))]",
+                      "identity": "system"
                     }
                   ]
                 },
@@ -542,6 +547,10 @@
                         {
                           "name": "OPENCLAW_GATEWAY_TOKEN",
                           "secretRef": "gateway-token"
+                        },
+                        {
+                          "name": "OPENCLAW_CONFIG",
+                          "secretRef": "openclaw-config-json"
                         },
                         {
                           "name": "OPENCLAW_GATEWAY_BIND",
@@ -565,16 +574,11 @@
                         }
                       ],
                       "command": [
-                        "node"
+                        "sh"
                       ],
                       "args": [
-                        "openclaw.mjs",
-                        "gateway",
-                        "--allow-unconfigured",
-                        "--bind",
-                        "lan",
-                        "--port",
-                        "18789"
+                        "-c",
+                        "mkdir -p /home/node/.openclaw && echo \"$OPENCLAW_CONFIG\" > /home/node/.openclaw/openclaw.json && exec node openclaw.mjs gateway --allow-unconfigured --bind lan --port 18789"
                       ],
                       "volumeMounts": [
                         {
