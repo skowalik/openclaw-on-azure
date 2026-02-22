@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.40.2.10011",
-      "templateHash": "10989729861377262516"
+      "templateHash": "18108959174402079283"
     }
   },
   "parameters": {
@@ -454,7 +454,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.40.2.10011",
-              "templateHash": "16099933769388402335"
+              "templateHash": "1468337582889549322"
             }
           },
           "parameters": {
@@ -531,6 +531,11 @@
                       "name": "openclaw-config-json",
                       "keyVaultUrl": "[format('{0}secrets/openclaw-config', parameters('keyVaultUri'))]",
                       "identity": "system"
+                    },
+                    {
+                      "name": "openclaw-wa-auth",
+                      "keyVaultUrl": "[format('{0}secrets/openclaw-wa-auth', parameters('keyVaultUri'))]",
+                      "identity": "system"
                     }
                   ]
                 },
@@ -551,6 +556,10 @@
                         {
                           "name": "OPENCLAW_CONFIG",
                           "secretRef": "openclaw-config-json"
+                        },
+                        {
+                          "name": "OPENCLAW_WA_AUTH",
+                          "secretRef": "openclaw-wa-auth"
                         },
                         {
                           "name": "OPENCLAW_GATEWAY_BIND",
@@ -578,7 +587,7 @@
                       ],
                       "args": [
                         "-c",
-                        "mkdir -p /home/node/.openclaw && echo \"$OPENCLAW_CONFIG\" > /home/node/.openclaw/openclaw.json && exec node openclaw.mjs gateway --allow-unconfigured --bind lan --port 18789"
+                        "mkdir -p /home/node/.openclaw/credentials/whatsapp/default && echo \"$OPENCLAW_CONFIG\" > /home/node/.openclaw/openclaw.json && echo \"$OPENCLAW_WA_AUTH\" | base64 -d | tar xzf - -C /home/node/.openclaw/credentials/whatsapp/default && exec node openclaw.mjs gateway --allow-unconfigured --bind lan --port 18789"
                       ],
                       "volumeMounts": [
                         {

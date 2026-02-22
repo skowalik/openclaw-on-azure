@@ -57,6 +57,11 @@ resource containerApp 'Microsoft.App/containerApps@2024-03-01' = {
           keyVaultUrl: '${keyVaultUri}secrets/openclaw-config'
           identity: 'system'
         }
+        {
+          name: 'openclaw-wa-auth'
+          keyVaultUrl: '${keyVaultUri}secrets/openclaw-wa-auth'
+          identity: 'system'
+        }
       ]
     }
     template: {
@@ -76,6 +81,10 @@ resource containerApp 'Microsoft.App/containerApps@2024-03-01' = {
             {
               name: 'OPENCLAW_CONFIG'
               secretRef: 'openclaw-config-json'
+            }
+            {
+              name: 'OPENCLAW_WA_AUTH'
+              secretRef: 'openclaw-wa-auth'
             }
             {
               name: 'OPENCLAW_GATEWAY_BIND'
@@ -103,7 +112,7 @@ resource containerApp 'Microsoft.App/containerApps@2024-03-01' = {
           ]
           args: [
             '-c'
-            'mkdir -p /home/node/.openclaw && echo "$OPENCLAW_CONFIG" > /home/node/.openclaw/openclaw.json && exec node openclaw.mjs gateway --allow-unconfigured --bind lan --port 18789'
+            'mkdir -p /home/node/.openclaw/credentials/whatsapp/default && echo "$OPENCLAW_CONFIG" > /home/node/.openclaw/openclaw.json && echo "$OPENCLAW_WA_AUTH" | base64 -d | tar xzf - -C /home/node/.openclaw/credentials/whatsapp/default && exec node openclaw.mjs gateway --allow-unconfigured --bind lan --port 18789'
           ]
           volumeMounts: [
             {
